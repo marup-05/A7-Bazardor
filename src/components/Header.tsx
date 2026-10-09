@@ -3,7 +3,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import NavLinks from "./NavLinks";
 
-import Marquee from "./Marquee";
+
 
 const Header = async () => {
   await connection();
@@ -57,7 +57,7 @@ const Header = async () => {
 
      <NavLinks />
 
-      <Marquee />
+    
     </header>
   );
 };

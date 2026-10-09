@@ -9,25 +9,45 @@ interface IProduct {
   image: string;
   today: number;
   change: {
-    dir: "up" | "down";
+    dir: "up" | "down" | "same";
     pct: number;
   };
 }
 
-const HomeProducts = async () => {
-  const res = await fetch(
-    "https://api.abcz.workers.dev/api/bazardor/products"
-  );
+const API_URL =
+  "https://api.api-store.workers.dev/api/bazardor/products";
 
-  const products: IProduct[] = await res.json();
+const HomeProducts = async () => {
+  const res = await fetch(API_URL, {
+    next: { revalidate: 300 },
+  });
+
+  if (!res.ok) {
+    return (
+      <p className="mt-12 text-center text-red-600">
+        পণ্যের তথ্য লোড করা যায়নি। পরে আবার চেষ্টা করুন।
+      </p>
+    );
+  }
+
+  const data: unknown = await res.json();
+
+  const products: IProduct[] = Array.isArray(data)
+    ? data
+    : typeof data === "object" &&
+        data !== null &&
+        "data" in data &&
+        Array.isArray(data.data)
+      ? data.data
+      : [];
 
   const risingProducts = products
-    .filter((product) => product.change.dir === "up")
+    .filter((product) => product.change?.dir === "up")
     .sort((a, b) => b.change.pct - a.change.pct)
     .slice(0, 6);
 
   const fallingProducts = products
-    .filter((product) => product.change.dir === "down")
+    .filter((product) => product.change?.dir === "down")
     .sort((a, b) => b.change.pct - a.change.pct)
     .slice(0, 6);
 
@@ -54,7 +74,7 @@ const HomeProducts = async () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">  
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {fallingProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -66,7 +86,7 @@ const HomeProducts = async () => {
           <h2 className="text-xl font-bold text-gray-800">সব পণ্য</h2>
 
           <p className="mt-1 text-sm text-gray-500">
-            মোট ৩৩টি পণ্য দেখানো হচ্ছে
+            মোট {products.length}টি পণ্য দেখানো হচ্ছে
           </p>
         </div>
 

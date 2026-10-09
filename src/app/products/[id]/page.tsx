@@ -51,9 +51,11 @@ async function ProductContent({ id }: { id: string }) {
   }
 
   const res = await fetch(
-    `https://api.abcz.workers.dev/api/bazardor/products/${encodeURIComponent(id)}`,
-    { cache: "no-store" }
-  );
+  `https://api.api-store.workers.dev/api/bazardor/products/${encodeURIComponent(id)}`,
+  {
+    next: { revalidate: 300 },
+  }
+);
 
   if (res.status === 404) {
     notFound();

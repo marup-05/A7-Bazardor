@@ -27,10 +27,12 @@ interface CategoryPageProps {
 async function CategoryContent({ params }: CategoryPageProps) {
   const { slug } = await params;
 
-  const res = await fetch(
-    `https://api.abcz.workers.dev/api/bazardor/products?category=${encodeURIComponent(slug)}`,
-    { cache: "no-store" }
-  );
+ const res = await fetch(
+  `https://api.api-store.workers.dev/api/bazardor/products?category=${encodeURIComponent(slug)}`,
+  {
+    next: { revalidate: 300 },
+  }
+);
 
   if (!res.ok) {
     throw new Error("পণ্যের তথ্য লোড করা যায়নি");
