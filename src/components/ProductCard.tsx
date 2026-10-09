@@ -46,7 +46,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
 
         <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${
+          className={`rounded-full px-2 py-1 text-xs font-medium ${  
             product.change.dir === "up"
               ? "bg-red-50 text-red-600"
               : "bg-green-50 text-green-600"
