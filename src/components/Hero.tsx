@@ -5,7 +5,7 @@ import { connection } from "next/server";
 const Hero = async () => {
   await connection();
 
-  const date = new Date().toLocaleDateString("bn-BD", {
+  const date = new Date().toLocaleDateString("bn-BD", {  
     dateStyle: "full",
   });
 

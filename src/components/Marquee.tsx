@@ -19,7 +19,7 @@ const Marquee = async () => {
     "https://api.abcz.workers.dev/api/bazardor/products"
   );
 
-  const products: IProduct[] = await res.json();
+  const products: IProduct[] = await res.json();  
 
   return (
     <div className="border-b border-gray-200 bg-green-700 text-white">
