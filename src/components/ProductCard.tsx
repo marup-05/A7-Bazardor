@@ -1,3 +1,7 @@
+
+import Link from "next/link";
+import { Card } from "@heroui/react";
+
 interface IProduct {
   id: number;
   slug: string;
@@ -7,7 +11,7 @@ interface IProduct {
   image: string;
   today: number;
   change: {
-    dir: "up" | "down";
+    dir: "up" | "down" | "same";
     pct: number;
   };
 }
@@ -16,57 +20,77 @@ interface ProductCardProps {
   product: IProduct;
 }
 
+const numberBn = new Intl.NumberFormat("bn-BD");
+
+const unitBn = (unit: string) => {
+  const units: Record<string, string> = {
+    kg: "কেজি",
+    liter: "লিটার",
+    dozen: "ডজন",
+    piece: "পিস",
+  };
+
+  return units[unit] || unit;
+};
+
 const ProductCard = ({ product }: ProductCardProps) => {
-  const unit =
-    product.unit === "kg"
-      ? "কেজি"
-      : product.unit === "liter"
-        ? "লিটার"
-        : product.unit === "dozen"
-          ? "ডজন"
-          : product.unit;
+  const isUp = product.change.dir === "up";
+  const isDown = product.change.dir === "down";
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-50 text-2xl">
-            {product.image}
+    <Link
+      href={`/products/${product.id}`}
+      className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600"
+      aria-label={`${product.nameBn} পণ্যের বিস্তারিত দেখুন`}
+    >
+      <Card
+        className="h-full w-full rounded-xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
+      >
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-2xl">
+                {product.image || "🛒"}
+              </span>
+
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold leading-6 text-gray-800">
+                  {product.nameBn}
+                </h3>
+
+                <p className="mt-0.5 text-xs text-gray-500">
+                  {product.categoryNameBn} · প্রতি {unitBn(product.unit)}
+                </p>
+              </div>
+            </div>
+
+            <span
+              className={`shrink-0 rounded-md px-2 py-1 text-xs font-semibold ${
+                isUp
+                  ? "bg-red-50 text-red-600"
+                  : isDown
+                    ? "bg-green-50 text-green-600"
+                    : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              {isUp ? "▲" : isDown ? "▼" : "—"}{" "}
+              {numberBn.format(product.change.pct)}%
+            </span>
           </div>
 
-          <div>
-            <h3 className="text-sm font-semibold text-gray-800">
-              {product.nameBn}
-            </h3>
+          <div className="mt-4">
+            <p className="text-xs text-gray-500">আজকের দাম</p>
 
-            <p className="text-xs text-gray-500">
-              {product.categoryNameBn} · প্রতি {unit}
+            <p className="mt-1 text-lg font-bold text-gray-800">
+              {numberBn.format(product.today)} টাকা
+              <span className="ml-1 text-xs font-normal text-gray-500">
+                / {unitBn(product.unit)}
+              </span>
             </p>
           </div>
         </div>
-
-        <span
-          className={`rounded-full px-2 py-1 text-xs font-medium ${  
-            product.change.dir === "up"
-              ? "bg-red-50 text-red-600"
-              : "bg-green-50 text-green-600"
-          }`}
-        >
-          {product.change.dir === "up" ? "▲" : "▼"} {product.change.pct}%
-        </span>
-      </div>
-
-      <div className="mt-4">
-        <p className="text-xs text-gray-500">আজকের দাম</p>
-
-        <p className="mt-1 text-lg font-bold text-gray-800">
-          {product.today} টাকা
-          <span className="ml-1 text-xs font-normal text-gray-500">
-            / {unit}
-          </span>
-        </p>
-      </div>
-    </div>
+      </Card>
+    </Link>
   );
 };
 

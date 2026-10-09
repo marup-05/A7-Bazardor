@@ -12,7 +12,7 @@ const Hero = async () => {
   return (
     <section className="grid items-center gap-8 rounded-2xl bg-green-50 px-6 py-10 md:grid-cols-2 md:px-10">
       <div>
-        <p className="mb-3 inline-block rounded-full bg-gray-100 px-4 py-2 text-sm font-semibold text-green-600">
+        <p className="mb-3 inline-block rounded-full bg-gray-200 px-4 py-2 text-sm font-semibold text-green-600">
           {date}
         </p>
 

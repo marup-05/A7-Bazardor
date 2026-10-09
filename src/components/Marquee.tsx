@@ -9,17 +9,26 @@ interface IProduct {
   image: string;
   today: number;
   change: {
-    dir: "up" | "down";
+    dir: "up" | "down" | "same";
     pct: number;
   };
 }
 
+const numberBn = new Intl.NumberFormat("bn-BD", {
+  maximumFractionDigits: 2,
+});
+
 const Marquee = async () => {
   const res = await fetch(
-    "https://api.abcz.workers.dev/api/bazardor/products"
+    "https://api.abcz.workers.dev/api/bazardor/products",
+    { cache: "no-store" }
   );
 
-  const products: IProduct[] = await res.json();  
+  if (!res.ok) {
+    throw new Error("পণ্যের তথ্য লোড করা যায়নি");
+  }
+
+  const products: IProduct[] = await res.json();
 
   return (
     <div className="border-b border-gray-200 bg-green-700 text-white">
@@ -32,16 +41,29 @@ const Marquee = async () => {
           {products.map((product) => (
             <Link
               key={product.id}
-              href={`/product/${product.slug}`}
+              href={`/products/${product.id}`}
               className="hover:underline"
             >
               <span>
-                {product.image} {product.nameBn} — {product.today} টাকা
+                {product.image} {product.nameBn} —{" "}
+                {numberBn.format(product.today)} টাকা
               </span>
 
-              <span className="mx-3">
-                {product.change.dir === "up" ? "▲" : "▼"}{" "}
-                {product.change.pct}%
+              <span
+                className={`mx-3 ${
+                  product.change.dir === "up"
+                    ? "text-red-200"
+                    : product.change.dir === "down"
+                      ? "text-green-200"
+                      : "text-white"
+                }`}
+              >
+                {product.change.dir === "up"
+                  ? "▲"
+                  : product.change.dir === "down"
+                    ? "▼"
+                    : "—"}{" "}
+                {numberBn.format(product.change.pct)}%
               </span>
 
               <span className="mx-3">•</span>
