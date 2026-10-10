@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import MarqueeAnimation from "./MarqueeAnimation"; 
+import MarqueeAnimation from "./MarqueeAnimation";
 
 interface IProduct {
   id: number;
@@ -67,7 +67,7 @@ export default function Marquee() {
   return (
     <Suspense
       fallback={
-        <div className="bg-green-700 py-2 text-center text-sm text-white">
+        <div className="w-full overflow-hidden bg-green-700 px-3 py-2 text-center text-xs text-white sm:text-sm">
           বাজার দর লোড হচ্ছে...
         </div>
       }

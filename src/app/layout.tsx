@@ -13,28 +13,34 @@ const notoSerifBengali = Noto_Serif_Bengali({
 
 export const metadata: Metadata = {
   title: "বাজার দর",
-  description: "",
+  description: "প্রয়োজনীয় পণ্যের দাম এক নজরে।",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: LayoutProps<"/">) {
   return (
     <html
       lang="bn"
       data-theme="light"
       className={`${notoSerifBengali.className} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col overflow-x-clip">
         <Suspense fallback={null}>
           <Header />
         </Suspense>
 
-        <main className="max-w-6xl mx-auto mt-5 mb-3">
+        <main className="mx-auto my-4 w-full max-w-6xl min-w-0 flex-1 px-3 sm:my-5 sm:px-4">
           {children}
         </main>
-      <ToastContainer position="top-center" />
-      <Footer /> 
 
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          limit={3}
+        />
 
+        <Footer />
       </body>
     </html>
   );

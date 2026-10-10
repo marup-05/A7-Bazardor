@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { Card } from "@heroui/react";
 
@@ -40,32 +39,30 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Link
       href={`/products/${product.id}`}
-      className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600"
+      className="block h-full min-w-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600"
       aria-label={`${product.nameBn} পণ্যের বিস্তারিত দেখুন`}
     >
-      <Card
-        className="h-full w-full rounded-xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
-      >
-        <div className="p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-2xl">
+      <Card className="h-full w-full min-w-0 rounded-xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+        <div className="min-w-0 p-3 sm:p-4">
+          <div className="flex min-w-0 items-start justify-between gap-2 sm:gap-3">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-xl sm:h-11 sm:w-11 sm:text-2xl">
                 {product.image || "🛒"}
               </span>
 
               <div className="min-w-0">
-                <h3 className="text-sm font-semibold leading-6 text-gray-800">
+                <h3 className="break-words text-sm font-semibold leading-5 text-gray-800 sm:leading-6">
                   {product.nameBn}
                 </h3>
 
-                <p className="mt-0.5 text-xs text-gray-500">
+                <p className="mt-1 break-words text-[11px] leading-4 text-gray-500 sm:text-xs">
                   {product.categoryNameBn} · প্রতি {unitBn(product.unit)}
                 </p>
               </div>
             </div>
 
             <span
-              className={`shrink-0 rounded-md px-2 py-1 text-xs font-semibold ${
+              className={`shrink-0 rounded-md px-1.5 py-1 text-[10px] font-semibold sm:px-2 sm:text-xs ${
                 isUp
                   ? "bg-red-50 text-red-600"
                   : isDown
@@ -78,10 +75,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </span>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-3 sm:mt-4">
             <p className="text-xs text-gray-500">আজকের দাম</p>
 
-            <p className="mt-1 text-lg font-bold text-gray-800">
+            <p className="mt-1 break-words text-base font-bold leading-6 text-gray-800 sm:text-lg">
               {numberBn.format(product.today)} টাকা
               <span className="ml-1 text-xs font-normal text-gray-500">
                 / {unitBn(product.unit)}

@@ -30,15 +30,15 @@ export default function MarqueeAnimation({
   products: IProduct[];
 }) {
   return (
-    <div className="border-b border-gray-200 bg-green-700 text-white">
-      <div className="mx-auto flex max-w-6xl">
-        <div className="shrink-0 bg-green-800 px-5 py-2 font-bold">
+    <div className="w-full overflow-hidden border-b border-gray-200 bg-green-700 text-white">
+      <div className="mx-auto flex min-w-0 max-w-6xl">
+        <div className="shrink-0 bg-green-800 px-3 py-5 text-xs font-bold sm:px-5 sm:text-sm">
           বাজার দর
         </div>
 
         <div className="min-w-0 flex-1 overflow-hidden">
           <MarqueeText
-            className="py-2"
+            className="py-2 text-xs sm:text-sm"
             direction="right"
             duration={7}
           >
@@ -46,15 +46,15 @@ export default function MarqueeAnimation({
               <Link
                 key={product.id}
                 href={`/products/${product.id}`}
-                className="whitespace-nowrap hover:underline"
+                className="inline-block whitespace-nowrap px-1 hover:underline sm:px-2"
               >
                 <span>
-                  {product.image} {product.nameBn} —{" "}
+                  {product.image || "🛒"} {product.nameBn} —{" "}
                   {numberBn.format(product.today)} টাকা
                 </span>
 
                 <span
-                  className={`mx-3 ${
+                  className={`mx-2 sm:mx-3 ${
                     product.change.dir === "up"
                       ? "text-red-200"
                       : product.change.dir === "down"
@@ -70,7 +70,7 @@ export default function MarqueeAnimation({
                   {numberBn.format(product.change.pct)}%
                 </span>
 
-                <span className="mx-3">•</span>
+                <span className="mx-1 sm:mx-3">•</span>
               </Link>
             ))}
           </MarqueeText>
