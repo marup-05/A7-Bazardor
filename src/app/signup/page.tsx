@@ -78,7 +78,7 @@ const SignupPage = () => {
         return;
       }
 
-      toast.success("সাইন আপ সফল হয়েছে! এখন সাইন ইন করুন।");
+      toast.success("সাইন আপ সফল হয়েছে!");
       router.replace("/");
       router.refresh();
     } catch {
