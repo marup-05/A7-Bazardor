@@ -27,14 +27,20 @@ function GithubIcon() {
 
 const SigninPage = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
-    if (loading) return;
+    if (loading || googleLoading || githubLoading) return;
 
     const formData = new FormData(e.currentTarget);
+
     const email = String(formData.get("email") ?? "").trim();
     const password = String(formData.get("password") ?? "");
 
@@ -58,7 +64,7 @@ const SigninPage = () => {
 
       if (data) {
         toast.success("সফলভাবে সাইন ইন হয়েছে!");
-        router.push("/");
+        router.replace("/");
         router.refresh();
       } else {
         toast.error("সাইন ইন নিশ্চিত করা যায়নি। আবার চেষ্টা করুন।");
@@ -67,6 +73,62 @@ const SigninPage = () => {
       toast.error("একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    if (loading || googleLoading || githubLoading) return;
+
+    setGoogleLoading(true);
+
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/?authSuccess=google",
+        errorCallbackURL: "/signin",
+      });
+
+      if (error) {
+        toast.error(
+          error.message || "Google দিয়ে সাইন ইন করা যায়নি।"
+        );
+        setGoogleLoading(false);
+      }
+    toast.success("Google দিয়ে সাইন ইন সফল হয়েছে!");
+
+    } catch {
+      toast.error(
+        "Google authentication-এ সমস্যা হয়েছে। আবার চেষ্টা করুন।"
+      );
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleGithubSignIn = async () => {
+    if (loading || googleLoading || githubLoading) return;
+
+    setGithubLoading(true);
+
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "github",
+        callbackURL: "/?authSuccess=github",
+        errorCallbackURL: "/signin",
+      });
+
+      if (error) {
+        toast.error(
+          error.message || "GitHub দিয়ে সাইন ইন করা যায়নি।"
+        );
+        setGithubLoading(false);
+      }
+      toast.success("GitHub দিয়ে সাইন ইন সফল হয়েছে!");
+
+    } catch {
+      toast.error(
+        "GitHub authentication-এ সমস্যা হয়েছে। আবার চেষ্টা করুন।"
+      );
+      setGithubLoading(false);
     }
   };
 
@@ -116,7 +178,7 @@ const SigninPage = () => {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || googleLoading || githubLoading}
               className="h-9 w-full rounded-lg bg-green-700 text-xs font-semibold text-white shadow-sm transition hover:bg-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}
@@ -132,22 +194,26 @@ const SigninPage = () => {
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <button
               type="button"
-              disabled
-              title="Google authentication পরে যোগ করা হবে"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading || loading || githubLoading}
               className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#dfe7df] px-2 text-[11px] font-semibold text-gray-700 transition hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-70"
             >
               <GoogleIcon />
-              <span>Google দিয়ে চালিয়ে যান</span>
+              <span>
+                {googleLoading ? "Google-এ যাচ্ছেন..." : "Google দিয়ে চালিয়ে যান"}
+              </span>
             </button>
 
             <button
               type="button"
-              disabled
-              title="GitHub authentication পরে যোগ করা হবে"
+              onClick={handleGithubSignIn}
+              disabled={githubLoading || googleLoading || loading}
               className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-[#dfe7df] px-2 text-[11px] font-semibold text-gray-700 transition hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-70"
             >
               <GithubIcon />
-              <span>GitHub দিয়ে চালিয়ে যান</span>
+              <span>
+                {githubLoading ? "GitHub-এ যাচ্ছেন..." : "GitHub দিয়ে চালিয়ে যান"}
+              </span>
             </button>
           </div>
 
@@ -160,10 +226,7 @@ const SigninPage = () => {
         </div>
 
         <div className="mt-5 text-center">
-          <Link
-            href="/"
-            className="text-xs text-gray-500 transition hover:text-green-700"
-          >
+          <Link href="/" className="text-xs text-gray-500 transition hover:text-green-700">
             ← হোম পেজে ফিরে যান
           </Link>
         </div>
