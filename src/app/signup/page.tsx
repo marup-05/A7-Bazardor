@@ -70,7 +70,7 @@ const SignupPage = () => {
         name,
         email,
         password,
-        callbackURL: "/signin",
+        callbackURL: "/",
       });
 
       if (error) {
@@ -79,7 +79,7 @@ const SignupPage = () => {
       }
 
       toast.success("সাইন আপ সফল হয়েছে! এখন সাইন ইন করুন।");
-      router.replace("/signin");
+      router.replace("/");
       router.refresh();
     } catch {
       toast.error("একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।");
